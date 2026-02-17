@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  password     String
+  profileImage String       @default("")
+  role         String       @default("USER") // USER or ADMIN
+  plan         String       @default("FREE") // FREE or PREMIUM
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  invitations  Invitation[]
+}
+
+model Invitation {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug           String   @unique
+  templateId     String   @default("elegant-rose")
+  
+  // Couple Info
+  groomName      String   @default("")
+  brideName      String   @default("")
+  groomPhoto     String   @default("")
+  bridePhoto     String   @default("")
+  coverPhoto     String   @default("")
+  groomFather    String   @default("")
+  groomMother    String   @default("")
+  brideFather    String   @default("")
+  brideMother    String   @default("")
+  
+  // Event Info
+  eventDate      DateTime?
+  akadDate       DateTime?
+  akadTime       String   @default("")
+  receptionTime  String   @default("")
+  venue          String   @default("")
+  venueAddress   String   @default("")
+  lat            Float?
+  lng            Float?
+  
+  // Content
+  story          String   @default("")
+  galleryPhotos  String   @default("[]") // JSON array of photo URLs
+  musicUrl       String   @default("")
+  
+  // Digital Envelope
+  bankName       String   @default("")
+  bankAccount    String   @default("")
+  bankHolder     String   @default("")
+  qrisImage      String   @default("")
+  
+  // Status
+  isPublished    Boolean  @default(false)
+  viewCount      Int      @default(0)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  guests         Guest[]
+  wishes         Wish[]
+}
+
+model Guest {
+  id           String   @id @default(cuid())
+  invitationId String
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  name         String
+  phone        String   @default("")
+  group        String   @default("Umum") // VIP, Keluarga, Teman, Umum
+  rsvpStatus   String   @default("PENDING") // PENDING, ATTENDING, NOT_ATTENDING, MAYBE
+  rsvpCount    Int      @default(1)
+  qrCode       String   @default("")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Wish {
+  id           String   @id @default(cuid())
+  invitationId String
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guestName    String
+  message      String
+  createdAt    DateTime @default(now())
+}
