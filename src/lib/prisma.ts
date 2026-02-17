@@ -3,7 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: InstanceType<typeof PrismaClient> | undefined;
+    prisma: InstanceType<any> | undefined;
 };
 
 function createPrismaClient() {
