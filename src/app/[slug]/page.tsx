@@ -52,7 +52,7 @@ export default async function InvitationPage({ params, searchParams }: PageProps
         akadDate: invitation.akadDate?.toISOString() || null,
         createdAt: invitation.createdAt.toISOString(),
         updatedAt: invitation.updatedAt.toISOString(),
-        wishes: invitation.wishes.map((w) => ({
+        wishes: invitation.wishes.map((w: any) => ({
             ...w,
             createdAt: w.createdAt.toISOString(),
         })),
