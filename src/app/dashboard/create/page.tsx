@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -32,7 +32,7 @@ const steps = [
     { id: 8, title: 'Preview', icon: Eye },
 ];
 
-export default function CreateInvitationPage() {
+function CreateInvitationContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
@@ -607,5 +607,17 @@ export default function CreateInvitationPage() {
                 </div>
             </div>
         </div >
+    );
+}
+
+export default function CreateInvitationPage() {
+    return (
+        <Suspense fallback={
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-alt)' }}>
+                <Loader2 size={32} className="animate-spin" style={{ color: 'var(--color-primary)' }} />
+            </div>
+        }>
+            <CreateInvitationContent />
+        </Suspense>
     );
 }
